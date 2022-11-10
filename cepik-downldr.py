@@ -15,7 +15,7 @@ while True:
     if bool(match_check) == True:
         break
     else:
-        print("ZŁY FORMAT DATY! Podaj datę początkową w formacie RRRRMMDD: ")    
+        print("ZŁY FORMAT DATY! Podaj datę początkową w formacie RRRRMMDD: ")
         continue
 
 while True:
@@ -24,7 +24,7 @@ while True:
     if bool(match_check) == True:
         break
     else:
-        print("ZŁY FORMAT DATY! Podaj datę końcową w formacie RRRRMMDD: ")    
+        print("ZŁY FORMAT DATY! Podaj datę końcową w formacie RRRRMMDD: ")
         continue
 
 print("""
@@ -47,7 +47,7 @@ wielkopolskie - 30,
 zachodniopomorskie - 32.
 """)
 
-while True:    
+while True:
     voivodship = input("\nPodaj kod TERYT województwa: ")
     teryt_codes = ["02", "04", "06", "08", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30", "32"]
     if voivodship in teryt_codes:
@@ -70,7 +70,7 @@ while True:
         break
     else:
         print("Podałeś niewłaściwą opcję!!!! Spróbuj jeszcze raz!")
-    
+
 
 print("\nPobieram dane z CEPIK....")
 pojazdy_request = requests.get(cepik_url)
@@ -88,7 +88,7 @@ marki = []
 for i in pojazdy.attributes:
     marki.append(i['marka'])
 
-pojazdy['marka'] = marki  
+pojazdy['marka'] = marki
 
 modele = []
 
@@ -101,21 +101,21 @@ rodzaje = []
 
 for i in pojazdy.attributes:
     rodzaje.append(i['rodzaj-pojazdu'])
-    
+
 pojazdy['rodzaj'] = rodzaje
 
 daty = []
 
 for i in pojazdy.attributes:
     daty.append(i['data-pierwszej-rejestracji-w-kraju'])
-    
+
 pojazdy['data_pierw_rejestr'] = daty
 
 origins = []
 
 for i in pojazdy.attributes:
     origins.append(i['pochodzenie-pojazdu'])
-    
+
 pojazdy["pochodzenie"] = origins
 
 fuel = []
@@ -129,7 +129,7 @@ engine = []
 
 for i in pojazdy.attributes:
     engine.append(i['pojemnosc-skokowa-silnika'])
-    
+
 pojazdy['poj_silnika'] = engine
 
 pojazdy.drop('type', inplace=True, axis=1)
@@ -150,8 +150,10 @@ print("4. Tylko motocykle")
 print("5. Tylko ciężarówki")
 print("6. Tylko ciągniki")
 print("7. Tylko przyczepy i naczepy")
+print("8. Tylko pojazdy nowe, zakupione w kraju")
+print("8. Tylko pojazdy używane, zakupione w kraju")
 reporting = input("Wybierz opcję od 1 do 2: ")
-  
+
 
 ######### Exporting File ####################
 
@@ -168,38 +170,41 @@ elif reporting == "2":
     nazwa_pliku = nazwa_pliku + ".csv"
     cars__given_brand.to_csv(nazwa_pliku, index=False)
     print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-elif reporting == "3": 
+elif reporting == "3":
     cars = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD OSOBOWY")]
     nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
     nazwa_pliku = nazwa_pliku + ".csv"
     cars.to_csv(nazwa_pliku, index=False)
     print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-elif reporting == "4": 
+elif reporting == "4":
     bikes = pojazdy[(pojazdy.rodzaj == "MOTOCYKL")]
     nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
     nazwa_pliku = nazwa_pliku + ".csv"
     bikes.to_csv(nazwa_pliku, index=False)
     print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-elif reporting == "5": 
+elif reporting == "5":
     trucks = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD CIĘŻAROWY")]
     nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
     nazwa_pliku = nazwa_pliku + ".csv"
     trucks.to_csv(nazwa_pliku, index=False)
     print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-elif reporting == "6": 
+elif reporting == "6":
     tracktors = pojazdy[(pojazdy.rodzaj == "CIĄGNIK ROLNICZY")]
     nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
     nazwa_pliku = nazwa_pliku + ".csv"
     tracktors.to_csv(nazwa_pliku, index=False)
     print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-elif reporting == "7": 
-    trailers = pojazdy[(pojazdy.rodzaj == "NACZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA LEKKA")]
+elif reporting == "8":
+    new_cars = pojazdy[(pojazdy.pochodzenie == "NOWY ZAKUPIONY W KRAJU")]
     nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
     nazwa_pliku = nazwa_pliku + ".csv"
-    trailers.to_csv(nazwa_pliku, index=False)
+    new_cars.to_csv(nazwa_pliku, index=False)
+    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
+elif reporting == "9":
+    new_cars = pojazdy[(pojazdy.pochodzenie == "UŻYW. ZAKUPIONY W KRAJU")]
+    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
+    nazwa_pliku = nazwa_pliku + ".csv"
+    new_cars.to_csv(nazwa_pliku, index=False)
     print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
 else:
     print("Błąd! Funkcja jeszcze nie zaimplementowana")
-
-
-
