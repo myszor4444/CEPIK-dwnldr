@@ -1,1 +1,0 @@
-CEPIK-dwnldr is a simple program for downloading data of road vehicles registered in Poland. Data is downloaded from Polish Central Vehicles and Drivers Record (CEPIK) through API and converted to data frame. User has few options for writing data to disk.
