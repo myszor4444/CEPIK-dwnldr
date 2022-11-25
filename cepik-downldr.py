@@ -151,8 +151,9 @@ print("5. Tylko ciężarówki")
 print("6. Tylko ciągniki")
 print("7. Tylko przyczepy i naczepy")
 print("8. Tylko pojazdy nowe, zakupione w kraju")
-print("8. Tylko pojazdy używane, zakupione w kraju")
-reporting = input("Wybierz opcję od 1 do 2: ")
+print("9. Tylko pojazdy używane, zakupione w kraju")
+print("10. Pojazdy wybrane wg kilku kryteriów")
+reporting = input("Wybierz opcję od 1 do 9: ")
 
 
 ######### Exporting File ####################
@@ -206,5 +207,45 @@ elif reporting == "9":
     nazwa_pliku = nazwa_pliku + ".csv"
     new_cars.to_csv(nazwa_pliku, index=False)
     print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
+elif reporting == "10":
+    print("Odpowiedz na pytania dotyczące tego, co ma się znaleźć w zestawieniu pojazdów")
+    while True:
+        personal_yes_or_no = input("Czy ująć w zestawieniu samochody osobowe (t/n): ")
+        if personal_yes_or_no == "n" or personal_yes_or_no == "N":
+            personal_yes_or_no = False
+            break
+        elif personal_yes_or_no == "t" or personal_yes_or_no == "T":
+            personal_yes_or_no = True
+            break
+        else:
+            print("Nie ma takiej opcji!!!")
+            continue
+
+    if personal_yes_or_no == True:
+        exported_data = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD OSOBOWY")]
+    elif personal_yes_or_no == False:
+        exported_data = pd.DataFrame.empty
+
+    while True:
+        trucks_yes_or_no = input("Czy ująć w zestawieniu samochody ciężarowe (t/n): ")
+        if trucks_yes_or_no == "n" or trucks_yes_or_no == "N":
+            trucks_yes_or_no = False
+            break
+        elif trucks_yes_or_no == "t" or trucks_yes_or_no == "T":
+            trucks_yes_or_no = True
+            break
+        else:
+            print("Nie ma takiej opcji!!!")
+            continue
+
+    if trucks_yes_or_no == True:
+         trucks = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD CIĘŻAROWY")]
+         exported_data = pd.concat([trucks, exported_data], ignore_index=True)
+
+    exported_data.to_csv('testowy.csv', index=False)
+
+    #### dokończyć opcję eksportu wielokryteriowego
+
+
 else:
     print("Błąd! Funkcja jeszcze nie zaimplementowana")
