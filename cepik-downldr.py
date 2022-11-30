@@ -224,7 +224,7 @@ elif reporting == "10":
     if personal_yes_or_no == True:
         exported_data = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD OSOBOWY")]
     elif personal_yes_or_no == False:
-        exported_data = pd.DataFrame.empty
+        exported_data = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD OSOBOWY")]
 
     while True:
         trucks_yes_or_no = input("Czy ująć w zestawieniu samochody ciężarowe (t/n): ")
@@ -242,7 +242,39 @@ elif reporting == "10":
          trucks = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD CIĘŻAROWY")]
          exported_data = pd.concat([trucks, exported_data], ignore_index=True)
 
-    exported_data.to_csv('testowy.csv', index=False)
+    while True:
+        bikes_yes_or_no = input("Czy ująć w zestawieniu samochody motocykle (t/n): ")
+        if bikes_yes_or_no == "n" or trucks_yes_or_no == "N":
+            bikes_yes_or_no = False
+            break
+        elif bikes_yes_or_no == "t" or bikes_yes_or_no == "T":
+            bikes_yes_or_no = True
+            break
+        else:
+            print("Nie ma takiej opcji!!!")
+            continue
+
+    if bikes_yes_or_no == True:
+         bikes = pojazdy[(pojazdy.rodzaj == "MOTOCYKL")]
+         exported_data = pd.concat([bikes, exported_data], ignore_index=True)
+
+    while True:
+        tracktors_yes_or_no = input("Czy ująć w zestawieniu samochody ciągniki rolnicze? (t/n): ")
+        if tracktors_yes_or_no == "n" or tracktors_yes_or_no == "N":
+            bikes_tracktors_yes_or_noyes_or_no = False
+            break
+        elif tracktors_yes_or_no == "t" or tracktors_yes_or_no == "T":
+            tracktors_yes_or_no = True
+            break
+        else:
+            print("Nie ma takiej opcji!!!")
+            continue
+
+    if tracktors_yes_or_no == True:
+        tracktors = pojazdy[(pojazdy.rodzaj == "CIĄGNIK ROLNICZY")]
+        exported_data = pd.concat([tracktors, exported_data], ignore_index=True)
+
+    exported_data.to_csv('testowy2.csv', index=False)
 
     #### dokończyć opcję eksportu wielokryteriowego
 
