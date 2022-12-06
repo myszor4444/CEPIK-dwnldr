@@ -150,8 +150,8 @@ print("4. Tylko motocykle")
 print("5. Tylko ciężarówki")
 print("6. Tylko ciągniki")
 print("7. Tylko przyczepy i naczepy")
-print("8. Tylko pojazdy nowe, zakupione w kraju")
-print("9. Tylko pojazdy używane, zakupione w kraju")
+print("8. Tylko pojazdy nowe")
+print("9. Tylko pojazdy używane")
 print("10. Pojazdy wybrane wg kilku kryteriów")
 reporting = input("Wybierz opcję od 1 do 9: ")
 
@@ -195,12 +195,21 @@ elif reporting == "6":
     nazwa_pliku = nazwa_pliku + ".csv"
     tracktors.to_csv(nazwa_pliku, index=False)
     print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
+elif reporting == "7":
+    trailers = pojazdy[(pojazdy.rodzaj == "NACZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA LEKKA")]
+    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
+    nazwa_pliku = nazwa_pliku + ".csv"
+    trailers.to_csv(nazwa_pliku, index=False)
+    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
 elif reporting == "8":
     new_cars = pojazdy[(pojazdy.pochodzenie == "NOWY ZAKUPIONY W KRAJU")]
     nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
     nazwa_pliku = nazwa_pliku + ".csv"
     new_cars.to_csv(nazwa_pliku, index=False)
     print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
+
+# poprawić import nowych i używanych
+
 elif reporting == "9":
     new_cars = pojazdy[(pojazdy.pochodzenie == "UŻYW. ZAKUPIONY W KRAJU")]
     nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
@@ -276,8 +285,29 @@ elif reporting == "10":
 
     exported_data.to_csv('testowy2.csv', index=False)
 
-    #### dokończyć opcję eksportu wielokryteriowego
+    while True:
+        trailers_yes_or_no = input("Czy ująć w zestawieniu przyczepy i naczepy? (t/n): ")
+        if trailers_yes_or_no == "n" or trailers_yes_or_no == "N":
+            trailers_yes_or_no = False
+            break
+        elif trailers_yes_or_no == "t" or trailers_yes_or_no == "T":
+            trailers_yes_or_no = True
+            break
+        else:
+            print("Nie ma takiej opcji!!!")
+            continue
 
+    if trailers_yes_or_no == True:
+        trailers = pojazdy[(pojazdy.rodzaj == "NACZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA LEKKA")]
+        exported_data = pd.concat([tracktors, exported_data], ignore_index=True)
+
+    ################# Dokończyć eksport wg wielu kryteriów
+
+
+    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
+    nazwa_pliku = nazwa_pliku + ".csv"
+    exported_data.to_csv(nazwa_pliku, index=False)
+    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
 
 else:
     print("Błąd! Funkcja jeszcze nie zaimplementowana")
