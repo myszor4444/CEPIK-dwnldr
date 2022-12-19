@@ -2,6 +2,7 @@ import requests
 import json
 import pandas as pd
 import re
+from func import *
 
 
 ######### DATA REQUEST ####################
@@ -63,23 +64,12 @@ while True:
     choice = input("Wybierz opcję 1 lub 2: ")
 
     if choice == "1":
-        cepik_url = "https://api.cepik.gov.pl/pojazdy?wojewodztwo=" + voivodship + "&data-od=" + date01 + "&data-do=" + date02
-        break
-    elif choice == "2":
-        cepik_url = "https://api.cepik.gov.pl/pojazdy?wojewodztwo=" + voivodship + "&data-od=" + date01 + "&data-do=" + date02 + "&typ-daty=2"
         break
     else:
         print("Podałeś niewłaściwą opcję!!!! Spróbuj jeszcze raz!")
 
 
-print("\nPobieram dane z CEPIK....")
-pojazdy_request = requests.get(cepik_url)
-
-print("\nPrzetwarzam dane...")
-dicction = json.loads(pojazdy_request.text)
-dicction2 = dicction["data"]
-
-pojazdy = pd.DataFrame.from_dict(dicction2)
+pojazdy = cepik_download(date01, date02, voivodship, choice)
 
 ######### DATA WRANGLING ####################
 
