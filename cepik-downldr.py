@@ -133,17 +133,9 @@ pojazdy['links'] = pojazdy.links.apply(change)
 ############ Exporting Options #################
 
 print("\nJakiego rodzaju dane chcesz wyeksportować?")
-print("\n1. Ogólne zestawienie pojazdów")
-print("2. Zestawienie pojazdów danej marki")
-print("3. Tylko samochody osobowe")
-print("4. Tylko motocykle")
-print("5. Tylko ciężarówki")
-print("6. Tylko ciągniki")
-print("7. Tylko przyczepy i naczepy")
-print("8. Tylko pojazdy nowe")
-print("9. Tylko pojazdy używane")
-print("10. Pojazdy wybrane wg kilku kryteriów")
-reporting = input("Wybierz opcję od 1 do 9: ")
+print("\n1. Całe zestawienie pojazdów")
+print("2. Pojazdy wybrane wg moich kryteriów")
+reporting = input("Wybierz opcję 1 lub 2: ")
 
 
 ######### Exporting File ####################
@@ -154,6 +146,36 @@ if reporting == "1":
     pojazdy.to_csv(nazwa_pliku, index=False)
     print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
 elif reporting == "2":
+    print("Odpowiedz na pytania dotyczące tego, co ma się znaleźć w zestawieniu pojazdów")
+    if export_option("Czy ująć w zestawieniu samochody osobowe") == True:
+        exported_data = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD OSOBOWY")]
+    else:
+        exported_data = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD OSOBOWY")]
+
+    if export_option("Czy ująć w zestawieniu samochody ciężarowe") == True:
+         trucks = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD CIĘŻAROWY")]
+         exported_data = pd.concat([trucks, exported_data], ignore_index=True)
+    else:
+        pass
+
+    if export_option("Czy ująć w zestawieniu samochody motocykle") == True:
+         bikes = pojazdy[(pojazdy.rodzaj == "MOTOCYKL")]
+         exported_data = pd.concat([bikes, exported_data], ignore_index=True)
+    else:
+        pass
+
+    
+
+
+
+    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
+    nazwa_pliku = nazwa_pliku + ".csv"
+    exported_data.to_csv(nazwa_pliku, index=False)
+    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
+
+
+"""
+
     brand = input("Podaj markę, która Cię interesuje: ")
     brand = brand.upper()
     cars__given_brand = pojazdy[(pojazdy.marka == brand)]
@@ -206,6 +228,11 @@ elif reporting == "9":
     nazwa_pliku = nazwa_pliku + ".csv"
     new_cars.to_csv(nazwa_pliku, index=False)
     print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
+
+##########33
+#############333
+####################3
+
 elif reporting == "10":
     print("Odpowiedz na pytania dotyczące tego, co ma się znaleźć w zestawieniu pojazdów")
     while True:
@@ -301,3 +328,5 @@ elif reporting == "10":
 
 else:
     print("Błąd! Funkcja jeszcze nie zaimplementowana")
+
+"""
