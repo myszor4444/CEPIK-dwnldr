@@ -164,7 +164,32 @@ elif reporting == "2":
     else:
         pass
 
-    
+    if export_option("Czy ująć w zestawieniu ciągniki rolnicze?") == True:
+         tracktors = pojazdy[(pojazdy.rodzaj == "CIĄGNIK ROLNICZY")]
+         exported_data = pd.concat([tracktors, exported_data], ignore_index=True)
+    else:
+        pass
+
+    if export_option("Czy ująć w zestawieniu naczepy i przyczepy?") == True:
+         trailers = pojazdy[(pojazdy.rodzaj == "NACZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA LEKKA")]
+         exported_data = pd.concat([trailers, exported_data], ignore_index=True)
+    else:
+        pass
+
+    if export_option("Czy ująć w zestawieniu tylko pojazdy danych marek?") == True:
+         brands = input("Podaj interesującą Cię markę lub marki. Jeśli podajesz więcej niż jedną, oddziel je przecinkami: ")
+         brands = brands.upper()
+         brands = brands.replace(" ", "")
+         brands = brands.split(",")
+         exported_data_brands = exported_data[(exported_data.marka == "")]
+         for brand in brands:
+              cars__given_brand = exported_data[(exported_data.marka == brand)]
+              exported_data_brands = pd.concat([cars__given_brand, exported_data_brands], ignore_index=True)
+
+         exported_data = exported_data_brands
+    else:
+        pass
+
 
 
 
@@ -176,38 +201,7 @@ elif reporting == "2":
 
 """
 
-    brand = input("Podaj markę, która Cię interesuje: ")
-    brand = brand.upper()
-    cars__given_brand = pojazdy[(pojazdy.marka == brand)]
-    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
-    nazwa_pliku = nazwa_pliku + ".csv"
-    cars__given_brand.to_csv(nazwa_pliku, index=False)
-    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-elif reporting == "3":
-    cars = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD OSOBOWY")]
-    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
-    nazwa_pliku = nazwa_pliku + ".csv"
-    cars.to_csv(nazwa_pliku, index=False)
-    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-elif reporting == "4":
-    bikes = pojazdy[(pojazdy.rodzaj == "MOTOCYKL")]
-    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
-    nazwa_pliku = nazwa_pliku + ".csv"
-    bikes.to_csv(nazwa_pliku, index=False)
-    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-elif reporting == "5":
-    trucks = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD CIĘŻAROWY")]
-    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
-    nazwa_pliku = nazwa_pliku + ".csv"
-    trucks.to_csv(nazwa_pliku, index=False)
-    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-elif reporting == "6":
-    tracktors = pojazdy[(pojazdy.rodzaj == "CIĄGNIK ROLNICZY")]
-    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
-    nazwa_pliku = nazwa_pliku + ".csv"
-    tracktors.to_csv(nazwa_pliku, index=False)
-    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-elif reporting == "7":
+
     trailers = pojazdy[(pojazdy.rodzaj == "NACZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA LEKKA")]
     nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
     nazwa_pliku = nazwa_pliku + ".csv"
