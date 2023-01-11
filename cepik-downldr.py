@@ -190,7 +190,23 @@ elif reporting == "2":
     else:
         pass
 
+    pojazdy["nowe"] = pojazdy.pochodzenie.apply(lambda x: True if "NOWY" in x else False)
+    pojazdy["import"] = pojazdy.pochodzenie.apply(lambda x: True if "IMPORT" in x else False)
 
+    if export_option("Czy uwzględnić w zestawieniu pojazdy nowe") == True:
+        exported_data = pojazdy[pojazdy.nowe == True]
+    else:
+        pass
+
+    if export_option("Czy uwzględnić w zestawieniu tylko pojazdy używane lub zakupione po przepadku na rzecz skarbu państwa?") == True:
+        exported_data = pojazdy[pojazdy.nowe == False]
+    else:
+        pass
+
+    if export_option("Czy uwzględnić w zestawieniu tylko pojazdy importowane?") == True:
+        exported_data = pojazdy[pojazdy.import == True]
+    else:
+        pass
 
 
     nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
