@@ -63,13 +63,12 @@ while True:
 
     choice = input("Wybierz opcję 1 lub 2: ")
 
-    if choice == "1":
+    if choice == "1" or choice == "2":
+        pojazdy = cepik_download(date01, date02, voivodship, choice)
         break
     else:
         print("Podałeś niewłaściwą opcję!!!! Spróbuj jeszcze raz!")
 
-
-pojazdy = cepik_download(date01, date02, voivodship, choice)
 
 ######### DATA WRANGLING ####################
 
@@ -190,153 +189,33 @@ elif reporting == "2":
     else:
         pass
 
-    pojazdy["nowe"] = pojazdy.pochodzenie.apply(lambda x: True if "NOWY" in x else False)
-    pojazdy["import"] = pojazdy.pochodzenie.apply(lambda x: True if "IMPORT" in x else False)
+    exported_data["nowe"] = exported_data.pochodzenie.apply(lambda x: True if "NOWY" in x else False)
+    exported_data["imported"] = exported_data.pochodzenie.apply(lambda x: True if "IMPORT" in x else False)
+
+########### Tu mi się jszcze najebało i musze poprawić. 
 
     if export_option("Czy uwzględnić w zestawieniu pojazdy nowe") == True:
-        exported_data = pojazdy[pojazdy.nowe == True]
+        new_cars = exported_data[exported_data.nowe == True]
     else:
         pass
 
-    if export_option("Czy uwzględnić w zestawieniu tylko pojazdy używane lub zakupione po przepadku na rzecz skarbu państwa?") == True:
-        exported_data = pojazdy[pojazdy.nowe == False]
+    if export_option("Czy uwzględnić w zestawieniu pojazdy używane lub zakupione po przepadku na rzecz skarbu państwa?") == True:
+        uzywki = exported_data[exported_data.nowe == False]
     else:
         pass
 
-    if export_option("Czy uwzględnić w zestawieniu tylko pojazdy importowane?") == True:
-        exported_data = pojazdy[pojazdy.import == True]
+    if export_option("Czy uwzględnić w zestawieniu pojazdy importowane?") == True:
+        imported = exported_data[exported_data.imported == True]
     else:
         pass
 
-
-    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
-    nazwa_pliku = nazwa_pliku + ".csv"
-    exported_data.to_csv(nazwa_pliku, index=False)
-    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
+    exported_data = pd.concat([new_cars, uzywki, imported], ignore_index=True)
 
 
-"""
+nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
+nazwa_pliku = nazwa_pliku + ".csv"
+exported_data.to_csv(nazwa_pliku, index=False)
+print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
 
 
-    trailers = pojazdy[(pojazdy.rodzaj == "NACZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA LEKKA")]
-    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
-    nazwa_pliku = nazwa_pliku + ".csv"
-    trailers.to_csv(nazwa_pliku, index=False)
-    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-elif reporting == "8":
-    new_cars = pojazdy[(pojazdy.pochodzenie == "NOWY ZAKUPIONY W KRAJU")]
-    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
-    nazwa_pliku = nazwa_pliku + ".csv"
-    new_cars.to_csv(nazwa_pliku, index=False)
-    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
 
-# poprawić import nowych i używanych
-
-elif reporting == "9":
-    new_cars = pojazdy[(pojazdy.pochodzenie == "UŻYW. ZAKUPIONY W KRAJU")]
-    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
-    nazwa_pliku = nazwa_pliku + ".csv"
-    new_cars.to_csv(nazwa_pliku, index=False)
-    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-
-##########33
-#############333
-####################3
-
-elif reporting == "10":
-    print("Odpowiedz na pytania dotyczące tego, co ma się znaleźć w zestawieniu pojazdów")
-    while True:
-        personal_yes_or_no = input("Czy ująć w zestawieniu samochody osobowe (t/n): ")
-        if personal_yes_or_no == "n" or personal_yes_or_no == "N":
-            personal_yes_or_no = False
-            break
-        elif personal_yes_or_no == "t" or personal_yes_or_no == "T":
-            personal_yes_or_no = True
-            break
-        else:
-            print("Nie ma takiej opcji!!!")
-            continue
-
-    if personal_yes_or_no == True:
-        exported_data = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD OSOBOWY")]
-    elif personal_yes_or_no == False:
-        exported_data = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD OSOBOWY")]
-
-    while True:
-        trucks_yes_or_no = input("Czy ująć w zestawieniu samochody ciężarowe (t/n): ")
-        if trucks_yes_or_no == "n" or trucks_yes_or_no == "N":
-            trucks_yes_or_no = False
-            break
-        elif trucks_yes_or_no == "t" or trucks_yes_or_no == "T":
-            trucks_yes_or_no = True
-            break
-        else:
-            print("Nie ma takiej opcji!!!")
-            continue
-
-    if trucks_yes_or_no == True:
-         trucks = pojazdy[(pojazdy.rodzaj == "SAMOCHÓD CIĘŻAROWY")]
-         exported_data = pd.concat([trucks, exported_data], ignore_index=True)
-
-    while True:
-        bikes_yes_or_no = input("Czy ująć w zestawieniu samochody motocykle (t/n): ")
-        if bikes_yes_or_no == "n" or trucks_yes_or_no == "N":
-            bikes_yes_or_no = False
-            break
-        elif bikes_yes_or_no == "t" or bikes_yes_or_no == "T":
-            bikes_yes_or_no = True
-            break
-        else:
-            print("Nie ma takiej opcji!!!")
-            continue
-
-    if bikes_yes_or_no == True:
-         bikes = pojazdy[(pojazdy.rodzaj == "MOTOCYKL")]
-         exported_data = pd.concat([bikes, exported_data], ignore_index=True)
-
-    while True:
-        tracktors_yes_or_no = input("Czy ująć w zestawieniu samochody ciągniki rolnicze? (t/n): ")
-        if tracktors_yes_or_no == "n" or tracktors_yes_or_no == "N":
-            bikes_tracktors_yes_or_noyes_or_no = False
-            break
-        elif tracktors_yes_or_no == "t" or tracktors_yes_or_no == "T":
-            tracktors_yes_or_no = True
-            break
-        else:
-            print("Nie ma takiej opcji!!!")
-            continue
-
-    if tracktors_yes_or_no == True:
-        tracktors = pojazdy[(pojazdy.rodzaj == "CIĄGNIK ROLNICZY")]
-        exported_data = pd.concat([tracktors, exported_data], ignore_index=True)
-
-    exported_data.to_csv('testowy2.csv', index=False)
-
-    while True:
-        trailers_yes_or_no = input("Czy ująć w zestawieniu przyczepy i naczepy? (t/n): ")
-        if trailers_yes_or_no == "n" or trailers_yes_or_no == "N":
-            trailers_yes_or_no = False
-            break
-        elif trailers_yes_or_no == "t" or trailers_yes_or_no == "T":
-            trailers_yes_or_no = True
-            break
-        else:
-            print("Nie ma takiej opcji!!!")
-            continue
-
-    if trailers_yes_or_no == True:
-        trailers = pojazdy[(pojazdy.rodzaj == "NACZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA CIĘŻAROWA") + (pojazdy.rodzaj == "PRZYCZEPA LEKKA")]
-        exported_data = pd.concat([tracktors, exported_data], ignore_index=True)
-
-    ################# Dokończyć eksport wg wielu kryteriów
-
-
-    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
-    nazwa_pliku = nazwa_pliku + ".csv"
-    exported_data.to_csv(nazwa_pliku, index=False)
-    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-
-else:
-    print("Błąd! Funkcja jeszcze nie zaimplementowana")
-
-"""
