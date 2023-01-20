@@ -20,7 +20,7 @@ while True:
         continue
 
 while True:
-    date02 = input("Podaj datę końcową w formacie RRRRMMDD: ")
+    date02 = input("Podaj datę końcową w formacie RRRRMMDD (nie dalszą niż 2 lata od początkowej): ")
     match_check = re.fullmatch("[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]", date02)
     if bool(match_check) == True:
         break
@@ -191,31 +191,24 @@ elif reporting == "2":
 
     exported_data["nowe"] = exported_data.pochodzenie.apply(lambda x: True if "NOWY" in x else False)
     exported_data["imported"] = exported_data.pochodzenie.apply(lambda x: True if "IMPORT" in x else False)
+    new_cars = exported_data[exported_data.nowe == True]
+    uzywki = exported_data[exported_data.nowe == False]
+    imported = exported_data[exported_data.imported == True]
+    not_imported = exported_data[exported_data.imported == False]
 
-########### Tu mi się jszcze najebało i musze poprawić. 
-
-    if export_option("Czy uwzględnić w zestawieniu pojazdy nowe") == True:
-        new_cars = exported_data[exported_data.nowe == True]
+    if export_option("Czy chcesz ograniczyć zestawienie do pojazdów nowych") == True:
+        exported_data = new_cars
+    elif export_option("Czy chcesz ograniczyć zestawienie tylko do pojazdów używanych lub zakupionych po przepadku na rzecz skarbu państwa?") == True:
+        exported_data = uzywki
+    elif export_option("Czy chcesz uwzględnić w zestawieniu tylko pojazdy importowane?") == True:
+        exported_data = imported
+    elif export_option("Czy chcesz uwzględnić w zestawieniu tylko pojazdy kupione w kraju?") == True:
+        exported_data = not_imported
     else:
         pass
 
-    if export_option("Czy uwzględnić w zestawieniu pojazdy używane lub zakupione po przepadku na rzecz skarbu państwa?") == True:
-        uzywki = exported_data[exported_data.nowe == False]
-    else:
-        pass
 
-    if export_option("Czy uwzględnić w zestawieniu pojazdy importowane?") == True:
-        imported = exported_data[exported_data.imported == True]
-    else:
-        pass
-
-    exported_data = pd.concat([new_cars, uzywki, imported], ignore_index=True)
-
-
-nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
-nazwa_pliku = nazwa_pliku + ".csv"
-exported_data.to_csv(nazwa_pliku, index=False)
-print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
-
-
-
+    nazwa_pliku = input("Podaj nazwę pliku, do którego chcesz zapisać dane: ")
+    nazwa_pliku = nazwa_pliku + ".csv"
+    exported_data.to_csv(nazwa_pliku, index=False)
+    print("Pomyślnie wyeksportowano plik {}".format(nazwa_pliku))
