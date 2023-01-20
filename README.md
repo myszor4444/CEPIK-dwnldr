@@ -16,7 +16,7 @@ Script is written in Python 3 and you need 4 Python libraries to use it:
 
 ## How to use it?
 
-Just ran it and input a data:
+Just run it and input the data:
 
 1. Starting date (RRRRMMDD)
 2. Ending date (RRRRMMDD)
